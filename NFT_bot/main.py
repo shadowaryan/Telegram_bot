@@ -3,6 +3,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler
 from telegram.ext import *
 from uuid import uuid4
 from models import *
+from sqlalchemy.orm import sessionmaker
+import requests
 
 TOKEN = '5221341356:AAF5D4OKX3rEHv5M3KvyY6Sg9caipj0ej-k'
 
@@ -31,25 +33,37 @@ def help (update, context):
 
 #chat id function
 def chat_id_(update, context):
-    value=update.message.chat_id
-    return value
+    id_value=update.message.chat_id
+    return id_value
 
 
 #get link bot command
 def get_link(update, context):
     value = update.message.text.partition(' ')[2]
     update.message.reply_text(f"LINK GIVEN BY YOU - {value}")
-    main_id = chat_id_(update, context)
-    print(main_id)
+    response = requests.get(value)
+    #if 
+    print(response.status_code)
+    #db_fun(update, context)
     
 
 #database handling
-def db_fun():
+def db_fun(update, context):
+    main_id = chat_id_(update, context)
     ed_user = User(username='ed')
     our_user = session.query(User).filter_by(name='ed').first()
     
+    if ed_user not in our_user:
+        session.add(ed_user)
+
     ed_collection = Collection(Collection_link='random')
-    our_user = session.query(Collection).filter_by(Collection_link='ed').first()
+    our_collection = session.query(Collection).filter_by(Collection_link='ed').first()
+    
+    if ed_collection not in our_collection:
+        session.add(ed_collection)
+
+    for row in session.query(User, User.username).all():
+        print(row.User, row.username)
 
 
 '''def put(update, context):
