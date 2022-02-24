@@ -52,24 +52,24 @@ def help (update, context):
         
 #bot command to get collection data 
 def collection_name(update, context):
-    value = update.message.text.partition(' ')[2]
-    update.message.reply_text(f"NFT Collection Name - {value}")
-    res= 'https://api.opensea.io/collection/'+value+'/stats'
+    url = update.message.text.partition(' ')[2]
+    slug = url.split('/')[-1]
+    update.message.reply_text(f"NFT Collection Name - {slug}")
+    res = f'https://api.opensea.io/collection/{slug}/stats'
     response = requests.get(res)
     data = response.json()
-    stats=data['stats']['floor_price']
+    floor_price = data['stats']['floor_price']
     
     if response.status_code == 200:
         
-        new_collection = Collection(floor_price=stats,slug=value)
-        db_collection = session.query(Collection).filter_by(slug=value).first()
+        collection = Collection(floor_price=floor_price,slug=slug)
+        # db_collection = session.query(Collection).filter_by(slug=slug).first()
         
-        if db_collection is None:
-            session.add(new_collection)
-
-        #for row in session.query(User, User.username).all():
-        #    print(row.User, row.username)
+        if not session.query(session.query(Collection).filter_by(slug=slug).exists()).scalar():
+            session.add(collection)
         session.commit()
+
+
     else:
         update.message.reply_text('invalid input')
    
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     print("started")
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
-    dp.add_handler(CommandHandler("collection", collection_name))
+    dp.add_handler(CommandHandler("add_collection", collection_name))
     dp.add_handler(MessageHandler(Filters.text, handle_message))
     
 
