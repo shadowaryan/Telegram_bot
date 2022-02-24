@@ -8,9 +8,10 @@ from models import *
 from sqlalchemy.orm import *
 import requests
 from sqlalchemy import create_engine
+from sqlalchemy.sql import exists
 import json
 
-engine = create_engine('postgresql://spqqojmysvclhl:35e13032f8326f8b7908e52a75e65215a62437d5c0c618aaee8a14392405e188@ec2-52-204-14-80.compute-1.amazonaws.com:5432/d7jch8clhgaktb', echo=True)
+engine = create_engine('postgresql://spqqojmysvclhl:35e13032f8326f8b7908e52a75e65215a62437d5c0c618aaee8a14392405e188@ec2-52-204-14-80.compute-1.amazonaws.com:5432/d7jch8clhgaktb', echo=False)
 
 Session = sessionmaker(bind=engine)
 Session.configure(bind=engine)
@@ -32,7 +33,7 @@ def start (update, context):
     user = User(username=update.effective_user.username,chat_id=user_chat_id)
     # db_chat_id = session.query(User).filter_by(chat_id=user_chat_id).first()
 
-    if not session.query(User).filter_by(chat_id=user_chat_id).exists():
+    if not session.query(session.query(User).filter_by(chat_id=user_chat_id).exists()).scalar():
         session.add(user)
         print('done')
 
@@ -45,7 +46,7 @@ def help (update, context):
     update.message.reply_text("""
     Commands:
     /help - to view commands
-    /add-collection <YOUR_COLLECTION_NAME> - to add collection
+    /add_collection <YOUR_COLLECTION_NAME> - to add collection
     """)
 
         
