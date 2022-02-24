@@ -27,7 +27,7 @@ def start (update, context):
     update.message.reply_text("""hello,welcome
     For more Commands use - /help""")
 
-    user_chat_id_ = update.effective_user.id
+    user_chat_id = update.effective_user.id
 
     new_chat_id = User(username=update.effective_user.username,chat_id=user_chat_id)
     db_chat_id = session.query(User).filter_by(chat_id=user_chat_id).first()
@@ -59,7 +59,7 @@ def collection_name(update, context):
     data = response.json()
     stats=data['stats']['floor_price']
     
-    if response.status_code == True:
+    if response.status_code == 200:
         
         new_collection = Collection(floor_price=stats,slug=value)
         db_collection = session.query(Collection).filter_by(slug=value).first()
