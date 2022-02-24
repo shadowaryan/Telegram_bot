@@ -30,8 +30,21 @@ def handle_message(update,context):
 
 #bot start command    
 def start (update, context):
+    
+    main_chat_id = chat_id_(update, context)
+    new_chat_id = User(chat_id=main_chat_id)
+    db_chat_id = session.query(User).filter_by(chat_id=main_chat_id).first()
+    if new_chat_id not in db_chat_id:
+        session.add(new_chat_id)
+
+    main_username_id = username_id(update, context)
+    new_username_id = User(username=main_username_id)
+    db_username_id = session.query(User).filter_by(username=main_username_id).first()
+    if new_username_id not in db_username_id:
+        session.add(new_username_id)
+    
     update.message.reply_text("""hello,welcome
-   For more Commands use - /help""")
+    For more Commands use - /help""")
 
 #bot help command
 def help (update, context):
@@ -57,19 +70,6 @@ def collection_name(update, context):
     response = requests.get(value)
     
     if response.status_code == True:
-
-        main_chat_id = chat_id_(update, context)
-        new_chat_id = User(chat_id=main_chat_id)
-        db_chat_id = session.query(User).filter_by(chat_id=main_chat_id).first()
-        if new_chat_id not in db_chat_id:
-            session.add(new_chat_id)
-
-        main_username_id = username_id(update, context)
-        new_username_id = User(username=main_username_id)
-        db_username_id = session.query(User).filter_by(username=main_username_id).first()
-        if new_username_id not in db_username_id:
-            session.add(new_username_id)
-
         
         new_collection = Collection(slug=value)
         db_collection = session.query(Collection).filter_by(slug=value).first()
