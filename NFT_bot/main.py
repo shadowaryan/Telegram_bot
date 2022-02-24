@@ -3,8 +3,16 @@ from telegram.ext import Updater, CommandHandler, MessageHandler
 from telegram.ext import *
 from uuid import uuid4
 from models import *
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import *
 import requests
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+Session = sessionmaker(bind=engine)
+Session = sessionmaker()
+Session.configure(bind=engine)
+session = Session()
+
+engine = create_engine('postgres://spqqojmysvclhl:35e13032f8326f8b7908e52a75e65215a62437d5c0c618aaee8a14392405e188@ec2-52-204-14-80.compute-1.amazonaws.com:5432/d7jch8clhgaktb', echo=True)
 
 TOKEN = '5221341356:AAF5D4OKX3rEHv5M3KvyY6Sg9caipj0ej-k'
 
@@ -42,9 +50,35 @@ def get_link(update, context):
     value = update.message.text.partition(' ')[2]
     update.message.reply_text(f"LINK GIVEN BY YOU - {value}")
     response = requests.get(value)
-    #if 
-    print(response.status_code)
-    #db_fun(update, context)
+    
+    if response.status_code == True:
+
+        main_id = chat_id_(update, context)
+
+        ed_user = User(username=main_id)
+        our_user = session.query(User).filter_by(name=main_id).first()
+    
+        if ed_user not in our_user:
+            session.add(ed_user)
+
+        ed_collection = Collection(Collection_link=value)
+    
+        our_collection = session.query(Collection).filter_by(Collection_link=value).first()
+    
+        if ed_collection not in our_collection:
+            session.add(ed_collection)
+
+        #for row in session.query(User, User.username).all():
+        #    print(row.User, row.username)
+        session.commit()
+
+
+    else:
+        update.message.reply_text('which is invalid or not a link please try other link')
+   
+    
+    
+  
     
 
 #database handling
@@ -57,13 +91,15 @@ def db_fun(update, context):
         session.add(ed_user)
 
     ed_collection = Collection(Collection_link='random')
+
     our_collection = session.query(Collection).filter_by(Collection_link='ed').first()
     
     if ed_collection not in our_collection:
         session.add(ed_collection)
 
-    for row in session.query(User, User.username).all():
-        print(row.User, row.username)
+    #for row in session.query(User, User.username).all():
+    #    print(row.User, row.username)
+    session.commit()
 
 
 '''def put(update, context):
