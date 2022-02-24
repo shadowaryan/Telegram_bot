@@ -19,5 +19,5 @@ class Collection(Base):
 
 class Link(Base):
     __tablename__ = 'link'
-    user_id = Column(Interger, ForeignKey('User.id'),primary_key=True)
-    Collection_id = Column(Interger, ForeignKey('Collection.id'),primary_key=True)
+    user_id = Column(Integer, ForeignKey('User.id'),primary_key=True)
+    collection_id = Column(Integer, ForeignKey('collection.id'),primary_key=True)
