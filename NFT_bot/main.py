@@ -29,11 +29,11 @@ def start (update, context):
 
     user_chat_id = update.effective_user.id
 
-    new_chat_id = User(username=update.effective_user.username,chat_id=user_chat_id)
-    db_chat_id = session.query(User).filter_by(chat_id=user_chat_id).first()
+    user = User(username=update.effective_user.username,chat_id=user_chat_id)
+    # db_chat_id = session.query(User).filter_by(chat_id=user_chat_id).first()
 
-    if db_chat_id is None:
-        session.add(new_chat_id)
+    if not session.query(User).filter_by(chat_id=user_chat_id).exists():
+        session.add(user)
         print('done')
 
     
@@ -45,8 +45,7 @@ def help (update, context):
     update.message.reply_text("""
     Commands:
     /help - to view commands
-    /collection - write the nft collection name 
-    example- /collection YOUR_NFT_NAME
+    /add-collection <YOUR_COLLECTION_NAME> - to add collection
     """)
 
         
