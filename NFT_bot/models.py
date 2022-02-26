@@ -1,6 +1,6 @@
-from sqlalchemy import *
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import Column, Integer, String, Sequence, ForeignKey, Float
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
@@ -23,3 +23,4 @@ class User_Collection(Base):
     __tablename__ = 'user_collection'
     user_id = Column(Integer, ForeignKey('user.id'),primary_key=True)
     collection_id = Column(Integer, ForeignKey('collection.id'),primary_key=True)
+
