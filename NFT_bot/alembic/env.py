@@ -4,9 +4,9 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 import sys 
-sys.path.append('C:/CODE/Telegram_Bot/NFT_bot')
+sys.path.append('E:\\Workplace\\Telegram bot\\Telegram_bot\\NFT_bot')
 from alembic import context
-from models import *
+from models import Base
 
 
 # this is the Alembic Config object, which provides
