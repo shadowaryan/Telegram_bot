@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.sql import exists
 import json
 
-# from utils import get_collection_id
+from utils import get_collection_id
 
 # def get_collection_id(slug):
 #     collection = session.query(Collection).filter_by(slug=slug).first()
@@ -76,7 +76,7 @@ def add_collection(update, context):
     
     # if response.status_code == 200:
     user = session.query(User).filter_by(chat_id=update.effective_user.id).first()
-    collection_id = collection_id(slug)     #error_here
+    collection_id = get_collection_id(slug)     #error_here
     # db_collection = session.query(Collection).filter_by(slug=slug).first()
     
     if not session.query(session.query(Collection, User).filter(User_Collection.collection_id==collection_id, User_Collection.user_id==user.id).exists()).scalar():

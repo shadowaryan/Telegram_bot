@@ -1,6 +1,14 @@
 from models import *
-from main import session
 import requests
+from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy import create_engine
+
+
+engine = create_engine('postgresql://spqqojmysvclhl:35e13032f8326f8b7908e52a75e65215a62437d5c0c618aaee8a14392405e188@ec2-52-204-14-80.compute-1.amazonaws.com:5432/d7jch8clhgaktb', echo=False)
+
+Session = sessionmaker(bind=engine)
+Session.configure(bind=engine)
+session = Session()
 
 def get_collection_id(slug):
     collection = session.query(Collection).filter_by(slug=slug).first()
