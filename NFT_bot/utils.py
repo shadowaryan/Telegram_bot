@@ -2,7 +2,6 @@ from models import *
 from main import session
 import requests
 
-
 def get_collection_id(slug):
     collection = session.query(Collection).filter_by(slug=slug).first()
     if collection:
