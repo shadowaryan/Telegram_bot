@@ -23,8 +23,6 @@ from utils import get_collection_id
 
 
 
-
-
 engine = create_engine('postgresql://spqqojmysvclhl:35e13032f8326f8b7908e52a75e65215a62437d5c0c618aaee8a14392405e188@ec2-52-204-14-80.compute-1.amazonaws.com:5432/d7jch8clhgaktb', echo=False)
 
 Session = sessionmaker(bind=engine)
@@ -55,6 +53,7 @@ def start(update, context):
     session.commit()
    
 
+
 #bot help command
 def help (update, context):
     update.message.reply_text("""
@@ -68,26 +67,36 @@ def help (update, context):
 def add_collection(update, context):
     url = update.message.text.partition(' ')[2]
     slug = url.split('/')[-1]
-    # update.message.reply_text(f"NFT Collection Name - {slug}")
-    # res = f'https://api.opensea.io/collection/{slug}/stats'
-    # response = requests.get(res)
-    # data = response.json()
-    # floor_price = data['stats']['floor_price']
+    update.message.reply_text(f"NFT Collection Name - {slug}")
+    
+    # floor_price = response_json['stats']['floor_price']
     
     # if response.status_code == 200:
     user = session.query(User).filter_by(chat_id=update.effective_user.id).first()
-    collection_id = get_collection_id(slug)     #error_here
-    # db_collection = session.query(Collection).filter_by(slug=slug).first()
+    collection_id = get_collection_id(slug)
+    #db_collection = session.query(Collection).filter_by(slug=slug).first()
     
     if not session.query(session.query(Collection, User).filter(User_Collection.collection_id==collection_id, User_Collection.user_id==user.id).exists()).scalar():
-        user.collection.append(session.query(Collection).filter_by(id=collection_id).first())
-        # session.add()
-    session.commit()
+        collection = session.query(Collection).filter_by(id=collection_id).first()
+        user.collection.append(collection)
+        print('hello')
+        session.commit()
+    else:
+        update.message.reply_text("invaild text")
+
+    # res = f'https://api.opensea.io/collection/{slug}/stats'
+    # response = requests.get(res)
+    # response_data = response.json()
+    # response_json = response_data['stats'] 
+    # #for x in 
+
+# res = 'https://api.opensea.io/collection/lostpoets/stats'
+# response = requests.get(res)
+# response_data = response.json()
+# response_json = response_data['stats'] 
+# session.query(History_Collection).filter_by(response_json=**kwargs).first() 
 
 
-    # else:
-    #     update.message.reply_text('invalid input')
-   
 
 #message handling command
 def handle_message(update,context):
@@ -112,3 +121,5 @@ if __name__ == '__main__':
 
     updater.start_polling()
     updater.idle()
+
+

@@ -1,3 +1,4 @@
+from itertools import count
 from models import *
 import requests
 from sqlalchemy.orm import Session, sessionmaker
@@ -15,8 +16,11 @@ def get_collection_id(slug):
     if collection:
         return collection.id
     else:
-        floor_price = requests.get(f'https://api.opensea.io/collection/{slug}/stats').json()['stats']['floor_price']
-        collection = Collection(slug=slug, floor_price=floor_price)
+        resp = requests.get(f'https://api.opensea.io/collection/{slug}/stats').json()['stats']
+        floor_price = resp['floor_price']
+        count = resp['count']
+        print(count)
+        collection = Collection(slug=slug, floor_price=floor_price,count=count)
         session.add(collection)
         session.commit()
         return collection.id
