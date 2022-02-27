@@ -27,8 +27,8 @@ class User_Collection(Base):
     user_id = Column(Integer, ForeignKey('user.id'),primary_key=True)
     collection_id = Column(Integer, ForeignKey('collection.id'),primary_key=True)
 
-class History_Collection(Base):
-    __tablename__ = 'history_collection'
+class History(Base):
+    __tablename__ = 'history'
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     one_day_volume = Column(Float(10,5),nullable=False)
     one_day_change = Column(Float(10,5),nullable=False)
