@@ -75,14 +75,25 @@ def add_collection(update, context):
     user = session.query(User).filter_by(chat_id=update.effective_user.id).first()
     collection_id = get_collection_id(slug)
     #db_collection = session.query(Collection).filter_by(slug=slug).first()
-    
+    resp = requests.get(f'https://api.opensea.io/collection/{slug}/stats').json()['stats']
+
     if not session.query(session.query(Collection, User).filter(User_Collection.collection_id==collection_id, User_Collection.user_id==user.id).exists()).scalar():
         collection = session.query(Collection).filter_by(id=collection_id).first()
         user.collection.append(collection)
         print('hello')
+        History(resp)
         session.commit()
     else:
         update.message.reply_text("invaild text")
+
+def History(**kwargs):
+    for key,value in kwargs.items():
+        stats = History_Collection(key=value)
+        session.add(stats)
+        session.commit()
+
+
+
 
     # res = f'https://api.opensea.io/collection/{slug}/stats'
     # response = requests.get(res)
