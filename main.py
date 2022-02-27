@@ -88,7 +88,7 @@ def add_collection(update, context):
 
 def History(**kwargs):
     for key,value in kwargs.items():
-        stats = History_Collection(key=value)
+        stats = History(key=value)
         session.add(stats)
         session.commit()
 

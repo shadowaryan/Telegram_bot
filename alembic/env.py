@@ -3,8 +3,10 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-import sys 
-sys.path.append('C:\\CODE\\Telegram_Bot\\NFT_bot')
+import sys
+import os 
+print(os.getcwd())
+# sys.path.append('C:\\CODE\\Telegram_Bot\\NFT_bot')
 from alembic import context
 from models import Base
 

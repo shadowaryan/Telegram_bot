@@ -8,14 +8,14 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'user'
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    id = Column('user_id', primary_key=True)
     username = Column(String(50)) #shadowaryan 
     chat_id = Column(Integer) #123456789
     collection = relationship('Collection',secondary = 'user_collection', back_populates='user')
 
 class Collection(Base):
     __tablename__ = 'collection'
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    id = Column('colection_id', primary_key=True)
     slug = Column(String(512))
     floor_price = Column(Float(10,5))
     count = Column(Float(10,5),nullable=False)
@@ -23,13 +23,13 @@ class Collection(Base):
 
 class User_Collection(Base):
     __tablename__ = 'user_collection'
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    id = Column('user_collection_id', primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'),primary_key=True)
     collection_id = Column(Integer, ForeignKey('collection.id'),primary_key=True)
 
 class History(Base):
     __tablename__ = 'history'
-    id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
+    id = Column('history_id', primary_key=True)
     one_day_volume = Column(Float(10,5),nullable=False)
     one_day_change = Column(Float(10,5),nullable=False)
     one_day_sales = Column(Float(10,5),nullable=False)
