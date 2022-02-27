@@ -1,21 +1,30 @@
 from urllib import response
-from sqlalchemy import Column, Integer, String, Sequence, ForeignKey, Float
+from sqlalchemy import INTEGER, Column, Integer, String, Sequence, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.types import TIMESTAMP
+
 from postgresql_json import JSON
+from datetime import datetime
+
 
 Base = declarative_base()
 
+class CustomBase(Base):
+    __abstract__ = True
+    created_at = Column(TIMESTAMP, default=datetime.utcnow, nullable=True)
+    updated_at = Column(TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=True)
+
 class User(Base):
     __tablename__ = 'user'
-    id = Column('user_id', primary_key=True)
+    id = Column('id', Integer, primary_key=True)
     username = Column(String(50)) #shadowaryan 
     chat_id = Column(Integer) #123456789
     collection = relationship('Collection',secondary = 'user_collection', back_populates='user')
 
 class Collection(Base):
     __tablename__ = 'collection'
-    id = Column('colection_id', primary_key=True)
+    id = Column('id', Integer, primary_key=True)
     slug = Column(String(512))
     floor_price = Column(Float(10,5))
     count = Column(Float(10,5),nullable=False)
@@ -23,13 +32,13 @@ class Collection(Base):
 
 class User_Collection(Base):
     __tablename__ = 'user_collection'
-    id = Column('user_collection_id', primary_key=True)
+    id = Column('id',INTEGER, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'),primary_key=True)
     collection_id = Column(Integer, ForeignKey('collection.id'),primary_key=True)
 
 class History(Base):
     __tablename__ = 'history'
-    id = Column('history_id', primary_key=True)
+    id = Column('id', INTEGER, primary_key=True)
     one_day_volume = Column(Float(10,5),nullable=False)
     one_day_change = Column(Float(10,5),nullable=False)
     one_day_sales = Column(Float(10,5),nullable=False)
@@ -51,5 +60,5 @@ class History(Base):
     num_reports = Column(Float(10,5),nullable=False)
     market_cap = Column(Float(10,5),nullable=False)
     floor_price = Column(Float(10,5),nullable=False)
-    response_json = Column(JSON)
+    # response_json = Column(JSON)
  

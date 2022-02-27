@@ -6,7 +6,7 @@ from sqlalchemy import pool
 import sys
 import os 
 print(os.getcwd())
-# sys.path.append('C:\\CODE\\Telegram_Bot\\NFT_bot')
+sys.path.append('E:\\Workplace\\Telegram bot\\Telegram_bot')
 from alembic import context
 from models import Base
 
