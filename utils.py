@@ -23,4 +23,7 @@ def get_collection_id(slug):
         collection = Collection(slug=slug, floor_price=floor_price,count=count)
         session.add(collection)
         session.commit()
+        history =  History(**resp, collection_id=collection.id)
+        session.add(history)
+        session.commit()
         return collection.id

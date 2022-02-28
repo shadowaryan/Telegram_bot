@@ -20,7 +20,7 @@ class User(CustomBase):
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
     username = Column(String(50)) #shadowaryan 
     chat_id = Column(Integer) #123456789
-    collection = relationship('Collection', secondary = 'user_collection', back_populates='user')
+    collections = relationship('Collection', secondary = 'user_collection', back_populates='users')
 
 class Collection(CustomBase):
     __tablename__ = 'collection'
@@ -28,7 +28,9 @@ class Collection(CustomBase):
     slug = Column(String(512))
     floor_price = Column(Float(10,5))
     count = Column(Float(10,5),nullable=False)
-    user = relationship('User', secondary = 'user_collection', back_populates='collection')
+
+    users = relationship('User', secondary = 'user_collection', back_populates='collections')
+    history = relationship('History', back_populates='collection')
 
 class User_Collection(CustomBase):
     __tablename__ = 'user_collection'
@@ -39,6 +41,8 @@ class User_Collection(CustomBase):
 class History(CustomBase):
     __tablename__ = 'history'
     id = Column(Integer,Sequence('history_id_seq'), primary_key=True)
+    collection_id = Column(Integer, ForeignKey('collection.id'))
+    collection = relationship('Collection', back_populates='history')
     one_day_volume = Column(Float(10,5),nullable=False)
     one_day_change = Column(Float(10,5),nullable=False)
     one_day_sales = Column(Float(10,5),nullable=False)

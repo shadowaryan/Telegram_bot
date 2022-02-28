@@ -63,16 +63,16 @@ def add_collection(update, context):
     
     resp = requests.get(f'https://api.opensea.io/collection/{slug}/stats').json()['stats']
 
-    if not session.query(session.query(Collection, User).filter(User_Collection.collection_id==collection_id, User_Collection.user_id==user.id).exists()).scalar():
+    # if not session.query(session.query(Collection, User).filter(User_Collection.collection_id==collection_id, User_Collection.user_id==user.id).exists()).scalar():
+    if session.query(User_Collection).filter(User_Collection.collection_id==collection_id, User_Collection.user_id==user.id).count() == 0:
         collection = session.query(Collection).filter_by(id=collection_id).first()
-        user.collection.append(collection)
+        user.collections.append(collection)
         print('Collection added')
-        # History(resp)
         session.commit()
     else:
         update.message.reply_text("Invaild text, please use /help")
 
-    history = History(**resp)
+
 
 # def History(**kwargs):
 #     for key,value in kwargs.items():
