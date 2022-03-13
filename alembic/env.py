@@ -2,12 +2,11 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from alembic import context
 
 import sys
-import os 
-print(os.getcwd())
-sys.path.append('E:\\Workplace\\Telegram bot\\Telegram_bot')
-from alembic import context
+sys.path.append('.')
+
 from models import Base
 
 
